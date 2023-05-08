@@ -38,12 +38,35 @@ function loadVideo(keyword){
             var responseJson = JSON.parse(this.responseText);
             var htmlContent = "";
 
-            for(var i=0;i<responseJson.items.length; i++){
+            for(var i=0; i < esponseJson.items.length; i++){
                 if(responseJson.items[i].id.kind == 'youtube#channel'){
                     continue;
                 }
-                
+            var videoId = responseJson.items[i].id.videoId;
+            var videoTitle =  responseJson.items[i].snippet.title;
+            var videoDescription = responseJson.items[i].snippet.description;
+            var videoThumbnail = responseJson.items[i].snippet.thumbnails.medium.url;
+            htmlContent += '<div class="video" onclick="showVideo(\'' + videoId +'\')">'
+                htmlContent += '<div src="' + videoThumbnail + '">'
+                htmlContent += '<div class="title">' + videoTitle + '</div>'
+            htmlContent += '</div>'
             }
+
+            document.getElementById("list-video").innerHTML = htmlContent;
+        }else if(this.readyState == 4){
+            console.log("Fails");
         }
+        };
+        xhr.send();
     }
-}
+    
+    function closeVideo(){
+        modal.style.display = "none";
+            videoFrame.src = "";
+    }
+    function showVideo(videoId){
+        videoFrame.src = "http://www.youtube.com/embed/" + videoId +"?autoplay=1";
+        setTimeout(function(){
+            modal.style.display = "block";
+        },300);
+    }
